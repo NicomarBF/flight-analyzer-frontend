@@ -1,4 +1,6 @@
-import { AutoComplete, Button, Card, DatePicker, Form, Image, Layout, Typography, message } from 'antd';
+import { ClockCircleOutlined, PieChartOutlined } from '@ant-design/icons';
+
+import { AutoComplete, Button, Card, Col, DatePicker, Form, Image, Layout, Row, Statistic, Typography, message } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
@@ -15,6 +17,7 @@ const FlightAnalyzer = () => {
   const [aerodromos, setAerodromos] = useState([]);
   const [optionsOrigin, setOptionsOrigin] = useState([]);
   const [optionsDestination, setOptionsDestination] = useState([]);
+  const [analysisResult, setAnalysisResult] = useState(null);
 
 
   useEffect(() => {
@@ -47,11 +50,19 @@ const FlightAnalyzer = () => {
     return current && (current < today || current > maxDate);
   };
 
+  function convertMinutesToHoursAndMinutes(minutes) {
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = Math.round(minutes % 60);
+    if(hours === 0){
+      return `${remainingMinutes}m`;
+    }else{
+      return `${hours}h ${remainingMinutes}m`;
+    }
+  }
+
   const handleAnalyze = async (values) => {
     setLoading(true);
     setResult(null);
-
-    console.log(values)
 
     try {
       const { origin, destination, datetime } = values;
@@ -66,9 +77,7 @@ const FlightAnalyzer = () => {
         axios.get('http://localhost:3001/api/analysis', { params: payload }),
       ]);
 
-      setResult({
-        flightAnalysis: flightAnalysisResponse.data,
-      });
+      setAnalysisResult(flightAnalysisResponse.data.data)
 
       message.success('Análise concluída com sucesso!');
     } catch (error) {
@@ -133,22 +142,62 @@ const FlightAnalyzer = () => {
               </Button>
             </Form.Item>
           </Form>
-
-          {result && (
-            <div>
-              <Title level={4}>Resultado</Title>
-              <p>
-                <strong>Melhor Companhia Aérea:</strong> {result.bestCompany?.name || 'Desconhecida'}
-              </p>
-              <p>
-                <strong>Probabilidade de Atraso:</strong> {result.prediction?.probabilidade_atraso || 0}%
-              </p>
-              <p>
-                <strong>Tempo Estimado de Atraso:</strong> {result.prediction?.tempo_estimado_atraso || 0} minutos
-              </p>
-            </div>
-          )}
         </Card>
+
+        {analysisResult && (
+        <Card style={{ width: 500, margin: 'auto', textAlign: 'center', marginLeft: '50px' }}>
+            <Title level={4}>Resultado da Análise</Title>
+            <Row gutter={16}>
+              <Col span={12}>
+              <Card style={{ height: '100%' }}>
+                  <Title level={5}>Melhor Companhia Aérea</Title>
+                  <p style={{ color: '#2074b7', fontWeight: 'bold' }}>{analysisResult.air_company || 'Desconhecida'}</p>
+                </Card>
+              </Col>
+
+              <Col span={12}>
+                <Card style={{ height: '100%' }}>
+                  <Title level={5}>Probabilidade de Atraso</Title>
+                  <Statistic
+                    title="%"
+                    value={analysisResult.probability_of_outcome}
+                    precision={2}
+                    valueStyle={{ color: analysisResult.probability_of_outcome > 50 ? 'red' : 'green' }}
+                    prefix={<PieChartOutlined />}
+                  />
+                </Card>
+              </Col>
+            </Row>
+
+            <Row gutter={16} style={{ marginTop: '20px' }}>
+              <Col span={12}>
+              <Card style={{ height: '100%' }}>
+                  <Title level={5}>Tempo Estimado de Voo</Title>
+                  <Statistic
+                    title="Horas/Minutos"
+                    value={convertMinutesToHoursAndMinutes(analysisResult.estimated_flight_time)}
+                    precision={2}
+                    valueStyle={{ color: analysisResult.estimated_flight_time > analysisResult.normal_flight_time ? 'red' : 'green' }}
+                    prefix={<ClockCircleOutlined />}
+                  />
+                </Card>
+              </Col>
+
+              <Col span={12}>
+              <Card style={{ height: '100%' }}>
+                  <Title level={5}>Tempo Mediano de Voo</Title>
+                  <Statistic
+                    title="Horas/Minutos"
+                    value={convertMinutesToHoursAndMinutes(analysisResult.normal_flight_time)}
+                    precision={2}
+                    valueStyle={{ color: '#2074b7'}}
+                    prefix={<ClockCircleOutlined />}
+                  />
+                </Card>
+              </Col>
+            </Row>
+          </Card>
+        )}
       </Content>
     </Layout>
   );
