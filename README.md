@@ -1,70 +1,75 @@
-# Getting Started with Create React App
+# **Flight Analyzer - Front-end**
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## **Descrição Geral**
+O front-end do **Flight Analyzer** é uma interface de usuário desenvolvida para interagir com o back-end da aplicação, fornecendo uma experiência intuitiva e funcional para análise de voos. Ele permite que os usuários insiram dados relevantes, como aeroportos de origem e destino e a data/hora do voo, e apresenta os resultados da análise de maneira visualmente organizada e amigável.
 
-## Available Scripts
+A interface foi construída com **React.js** e utiliza o framework de componentes **Ant Design** para estilização e organização. O front-end comunica-se com o back-end por meio de chamadas HTTP assíncronas realizadas com **Axios**.
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## **Funcionalidades**
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### **1. Inputs de Dados**
+- **Seleção de Aeroporto de Origem e Destino**: Campo de auto-completar com validação e pesquisa em uma lista pré-definida.
+- **Data e Hora do Voo**: Campo de seleção com suporte a horário e formatação específica.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### **2. Botão de Análise**
+- Dispara uma requisição para o back-end, enviando os dados do usuário e aguardando o retorno da análise.
 
-### `npm test`
+### **3. Exibição dos Resultados**
+- Apresenta:
+  - Melhor companhia aérea recomendada.
+  - Probabilidade de atraso no voo.
+  - Tempo estimado de voo e atraso (se aplicável).
+- Exibição em um card adicional ao lado do card de input.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `npm run build`
+## **Tecnologias Utilizadas**
+- **React.js**: Biblioteca principal para construção da interface.
+- **Ant Design**: Framework para componentes estilizados e responsivos.
+- **Axios**: Para comunicação assíncrona com o back-end.
+- **React Testing Library**: Para criação e execução de testes no front-end.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+---
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## **Arquitetura**
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### **Componentização**
+Os elementos da interface são organizados em componentes reutilizáveis:
+1. **Formulário de Entrada**: Responsável pela coleta de dados do usuário.
+2. **Exibição de Resultados**: Card dinâmico que apresenta os resultados retornados pela API.
 
-### `npm run eject`
+### **Gestão de Estado**
+- **React Hooks**: `useState` e `useEffect` para gerenciar o estado da aplicação e realizar chamadas à API.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### **Fluxo de Dados**
+1. Usuário preenche os inputs e clica em "Analisar Voo".
+2. Front-end valida os inputs e envia os dados ao back-end.
+3. Resultados da análise são exibidos assim que retornam da API.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+---
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## **Setup e Execução**
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### **Pré-requisitos**
+- **Node.js**: Para gerenciar o ambiente de desenvolvimento.
+- **npm ou yarn**: Para instalar as dependências.
 
-## Learn More
+### **Instalação**
+1. Clone o repositório do front-end:
+   ```bash
+   git clone <URL_DO_REPOSITORIO>
+   cd flight-analyzer-frontend
+   
+2. Clone o repositório do front-end:
+   ```bash
+   npm install
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+3. Clone o repositório do front-end:
+   ```bash
+   npm start
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+4. Clone o repositório do front-end:
+   ```bash
+   http://localhost:3000
