@@ -1,75 +1,122 @@
-# **Flight Analyzer - Front-end**
+# ✈️🌐 Flight Analyzer Frontend 
 
-## **Descrição Geral**
-O front-end do **Flight Analyzer** é uma interface de usuário desenvolvida para interagir com o back-end da aplicação, fornecendo uma experiência intuitiva e funcional para análise de voos. Ele permite que os usuários insiram dados relevantes, como aeroportos de origem e destino e a data/hora do voo, e apresenta os resultados da análise de maneira visualmente organizada e amigável.
-
-A interface foi construída com **React.js** e utiliza o framework de componentes **Ant Design** para estilização e organização. O front-end comunica-se com o back-end por meio de chamadas HTTP assíncronas realizadas com **Axios**.
+## Motivação do Projeto
+O **Flight Analyzer Frontend** é a interface de usuário desenvolvida para facilitar a análise de voos com base em dados meteorológicos e operacionais. Esta aplicação permite ao usuário inserir dados como o aeroporto de origem, destino e data do voo, e visualizar resultados detalhados, como probabilidade de atraso, tempo estimado de voo e a melhor companhia aérea recomendada. A ideia principal é fornecer uma experiência visual intuitiva e responsiva, utilizando os dados analisados pelo backend.
 
 ---
 
-## **Funcionalidades**
+## Arquitetura do Projeto 🏗️
 
-### **1. Inputs de Dados**
-- **Seleção de Aeroporto de Origem e Destino**: Campo de auto-completar com validação e pesquisa em uma lista pré-definida.
-- **Data e Hora do Voo**: Campo de seleção com suporte a horário e formatação específica.
+O frontend foi desenvolvido com **React.js** e utiliza componentes da biblioteca **Ant Design** para construção de uma interface visualmente agradável e responsiva. A estrutura de pastas segue os padrões modernos de organização em projetos React, separando responsabilidades por componentes, serviços e arquivos públicos.
 
-### **2. Botão de Análise**
-- Dispara uma requisição para o back-end, enviando os dados do usuário e aguardando o retorno da análise.
-
-### **3. Exibição dos Resultados**
-- Apresenta:
-  - Melhor companhia aérea recomendada.
-  - Probabilidade de atraso no voo.
-  - Tempo estimado de voo e atraso (se aplicável).
-- Exibição em um card adicional ao lado do card de input.
+**Estrutura de Pastas:**
+```
+flight-analyzer-frontend/
+│
+├── node_modules/             # Dependências do projeto gerenciadas pelo npm
+├── public/                   # Arquivos públicos como favicon, imagens e index.html
+│   ├── images/               # Diretório para armazenar imagens estáticas
+│   │   ├── favicon.ico       # Ícone da aplicação
+│   │   ├── logo192.png       # Logotipo da aplicação em resolução menor
+│   │   ├── logo512.png       # Logotipo da aplicação em resolução maior
+│   ├── index.html            # HTML base da aplicação
+│   ├── manifest.json         # Configurações do manifest da aplicação
+│   └── robots.txt            # Configuração de bots de busca
+│
+├── src/                      # Código-fonte principal da aplicação
+│   ├── components/           # Componentes React reutilizáveis
+│   │   └── FlightAnalyzer/   # Componente principal para a interface de análise
+│   │       ├── FlightAnalyzer.js  # Arquivo JSX do componente principal
+│   │       └── FlightAnalyzer.css # Arquivo CSS do componente principal
+│   ├── services/             # Serviços para comunicação com o backend
+│   │   └── FlightAnalyzerService.js # Arquivo responsável por chamadas API
+│   ├── App.js                # Componente principal da aplicação
+│   ├── App.css               # Estilos globais da aplicação
+│   ├── App.test.js           # Testes para o componente App
+│   ├── index.js              # Ponto de entrada da aplicação React
+│   ├── index.css             # Estilos globais adicionais
+│   ├── logo.svg              # Logotipo SVG usado na aplicação
+│   ├── reportWebVitals.js    # Relatório de métricas de desempenho
+│   └── setupTests.js         # Configuração para testes
+│
+├── .env                      # Configurações de variáveis de ambiente
+├── .gitignore                # Arquivos e pastas ignorados pelo Git
+├── package.json              # Informações do projeto e dependências
+├── package-lock.json         # Versões exatas das dependências instaladas
+└── README.md                 # Documentação do projeto
+```
 
 ---
 
-## **Tecnologias Utilizadas**
-- **React.js**: Biblioteca principal para construção da interface.
-- **Ant Design**: Framework para componentes estilizados e responsivos.
-- **Axios**: Para comunicação assíncrona com o back-end.
-- **React Testing Library**: Para criação e execução de testes no front-end.
+## 💡 Funcionalidades Principais
+
+1. **Formulário de Entrada de Dados**
+   - Inputs para selecionar aeroportos de origem e destino.
+   - Seleção de data e hora do voo.
+   - Validação automática dos campos.
+
+2. **Exibição de Resultados**
+   - Probabilidade de atraso (%).
+   - Tempo estimado de voo (h:m).
+   - Melhor companhia aérea recomendada.
+
+3. **Design Responsivo**
+   - Interface adaptável a diferentes tamanhos de tela, garantindo usabilidade em dispositivos móveis e desktops.
 
 ---
 
-## **Arquitetura**
+## ✅ Requisitos do Projeto
 
-### **Componentização**
-Os elementos da interface são organizados em componentes reutilizáveis:
-1. **Formulário de Entrada**: Responsável pela coleta de dados do usuário.
-2. **Exibição de Resultados**: Card dinâmico que apresenta os resultados retornados pela API.
-
-### **Gestão de Estado**
-- **React Hooks**: `useState` e `useEffect` para gerenciar o estado da aplicação e realizar chamadas à API.
-
-### **Fluxo de Dados**
-1. Usuário preenche os inputs e clica em "Analisar Voo".
-2. Front-end valida os inputs e envia os dados ao back-end.
-3. Resultados da análise são exibidos assim que retornam da API.
+- **Node.js** (v14 ou superior)
+- **npm** ou **yarn**
+- Arquivo `.env` configurado com a URL do backend.
 
 ---
 
-## **Setup e Execução**
+## 🔧 Ferramentas e Dependências
 
-### **Pré-requisitos**
-- **Node.js**: Para gerenciar o ambiente de desenvolvimento.
-- **npm ou yarn**: Para instalar as dependências.
+- **React.js**: Framework principal da aplicação.
+- **Ant Design**: Biblioteca de componentes visuais.
+- **Axios**: Para realizar requisições HTTP ao backend.
+- **dotenv**: Gerenciamento de variáveis de ambiente.
+- **React Testing Library**: Ferramenta para testes unitários e de integração.
 
-### **Instalação**
-1. Clone o repositório do front-end:
+---
+
+## 🌐 Configuração do Ambiente
+
+1. Clone o repositório:
    ```bash
-   git clone <URL_DO_REPOSITORIO>
+   git clone https://github.com/seu-usuario/flight-analyzer-frontend.git
+   ```
+
+2. Acesse o diretório do projeto:
+   ```bash
    cd flight-analyzer-frontend
-   
-2. Clone o repositório do front-end:
+   ```
+
+3. Instale as dependências:
    ```bash
    npm install
+   ```
 
-3. Clone o repositório do front-end:
+4. Configure o arquivo `.env`:
+   Crie um arquivo `.env` na raiz do projeto e adicione a seguinte variável:
+   ```env
+   REACT_APP_BACKEND_URL=http://localhost:3001
+   ```
+
+5. Inicie o servidor de desenvolvimento:
    ```bash
    npm start
+   ```
 
-4. Clone o repositório do front-end:
-   ```bash
-   http://localhost:3000
+---
+
+## 🖼️ Imagens da Aplicação
+
+### Tela Inicial:
+<img src="./public/images/initial_screen.png" alt="Tela inicial" width="80%">
+
+### Tela com Resultados:
+<img src="./public/images/results_screen.png" alt="Tela com resultados" width="80%">
