@@ -92,7 +92,7 @@ const FlightAnalyzer = () => {
         <Row justify="center">
           <Col span={analysisResult ? 10 : 24}>
             <Image
-              src="/images/logo v3.png"
+              src="/images/logo.png"
               preview={false}
               alt="Logo"
               style={{ width: 400 }}
