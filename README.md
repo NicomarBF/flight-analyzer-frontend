@@ -48,6 +48,39 @@ flight-analyzer-frontend/
 
 ---
 
+### 📝⚙️ Requisitos Funcionais e Não Funcionais
+
+#### **Requisitos Funcionais**
+
+| **ID** | **Descrição**                                                                                   |
+|--------|-------------------------------------------------------------------------------------------------|
+| RF01   | Permitir ao usuário inserir o aeroporto de origem, aeroporto de destino e data/hora do voo.     |
+| RF02   | Enviar os dados inseridos pelo usuário para o backend para análise preditiva.                   |
+| RF03   | Exibir o resultado da análise, incluindo probabilidade de atraso, tempo estimado de voo e companhia aérea recomendada. |
+| RF04   | Exibir mensagens de erro amigáveis para entradas inválidas ou falhas na análise.                |
+| RF05   | Disponibilizar a interface em um layout responsivo, funcional em diferentes tamanhos de tela.   |
+| RF06   | Renderizar os resultados da análise em um formato visualmente atraente, utilizando componentes reutilizáveis. |
+| RF07   | Armazenar as variáveis de configuração como a URL do backend em um arquivo `.env`.              |
+
+---
+
+#### **Requisitos Não Funcionais**
+
+| **ID** | **Descrição**                                                                                   |
+|--------|-------------------------------------------------------------------------------------------------|
+| RNF01  | O frontend deve ser implementado utilizando **React.js** (versão 17+).                          |
+| RNF02  | Deve consumir o backend de forma eficiente, exibindo feedback ao usuário enquanto os dados são carregados (ex.: loader). |
+| RNF03  | Seguir as práticas de componentização, encapsulando a lógica em arquivos organizados no diretório `src/components`. |
+| RNF04  | As requisições para o backend devem ser feitas por meio de um serviço separado, seguindo boas práticas de separação de responsabilidades. |
+| RNF05  | Todo o código deve ser formatado e validado com **ESLint** e seguir o padrão de **Prettier**.    |
+| RNF06  | Garantir alta legibilidade e fácil manutenção, com nomes de variáveis e funções descritivos.     |
+| RNF07  | Configurar os testes unitários para o frontend utilizando **Jest** e **React Testing Library**. |
+| RNF08  | As dependências do projeto devem ser gerenciadas com o arquivo `package.json` e conter scripts bem definidos para desenvolvimento e produção. |
+| RNF09  | O layout deve utilizar componentes da biblioteca **Ant Design**, garantindo consistência visual e acessibilidade. |
+| RNF10  | O projeto deve estar estruturado para fácil expansão, permitindo a adição de novas funcionalidades sem comprometer as existentes. |
+
+---
+
 ## 💡 Funcionalidades Principais
 
 1. **Formulário de Entrada de Dados**
