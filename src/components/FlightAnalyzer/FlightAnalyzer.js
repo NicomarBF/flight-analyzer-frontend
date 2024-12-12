@@ -1,10 +1,11 @@
 import { ClockCircleOutlined, PieChartOutlined } from '@ant-design/icons';
 
-import { AutoComplete, Button, Card, Col, DatePicker, Form, Image, Layout, Row, Statistic, Typography, message } from 'antd';
-import axios from 'axios';
+import { AutoComplete, Button, Card, Col, DatePicker, Divider, Form, Image, Layout, Row, Statistic, Typography, message } from 'antd';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import './FlightAnalyzer.css';
+
+import FlightAnalyzerService from '../../services/FlightAnalyzerService';
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -12,18 +13,16 @@ const { Title } = Typography;
 const FlightAnalyzer = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState(null);
 
   const [aerodromos, setAerodromos] = useState([]);
   const [optionsOrigin, setOptionsOrigin] = useState([]);
   const [optionsDestination, setOptionsDestination] = useState([]);
   const [analysisResult, setAnalysisResult] = useState(null);
 
-
   useEffect(() => {
-    axios.get('http://localhost:3001/api/airports')
+    FlightAnalyzerService.getAirports()
       .then((response) => {
-        setAerodromos(response.data);
+        setAerodromos(response);
       })
       .catch((error) => {
         console.error('Erro ao carregar os aeródromos:', error);
@@ -62,8 +61,6 @@ const FlightAnalyzer = () => {
 
   const handleAnalyze = async (values) => {
     setLoading(true);
-    setResult(null);
-
     try {
       const { origin, destination, datetime } = values;
       const dateObj = new Date(datetime);
@@ -74,10 +71,10 @@ const FlightAnalyzer = () => {
       };
 
       const [flightAnalysisResponse] = await Promise.all([
-        axios.get('http://localhost:3001/api/analysis', { params: payload }),
+        FlightAnalyzerService.analyzeFlight(payload)
       ]);
 
-      setAnalysisResult(flightAnalysisResponse.data.data)
+      setAnalysisResult(flightAnalysisResponse.data)
 
       message.success('Análise concluída com sucesso!');
     } catch (error) {
@@ -91,113 +88,123 @@ const FlightAnalyzer = () => {
   return (
     <Layout className="ant-layout">
       <Content className="container">
-        <Card style={{ width: 500, margin: 'auto', textAlign: 'center' }}>
-        <Image
-          src="/images/logo v3.png"
-          preview={false}
-          alt="Logo"
-          style={{ width: 400 }}
-        />
-          <Form form={form} onFinish={handleAnalyze} layout="vertical">
-            <Form.Item
-              label="Aeroporto de Origem"
-              name="origin"
-              rules={[{ required: true, message: 'Por favor, insira o aeroporto de origem!' }]}
-            >
-              <AutoComplete
-                placeholder="Selecione o aeroporto de origem"
-                onSearch={(value) => handleSearch(value, setOptionsOrigin)}
-                options={optionsOrigin}
-                style={{ width: '100%' }}
-              />
-            </Form.Item>
-            <Form.Item
-              label="Aeroporto de Destino"
-              name="destination"
-              rules={[{ required: true, message: 'Por favor, insira o aeroporto de destino!' }]}
-            >
-              <AutoComplete
-                placeholder="Selecione o aeroporto de destino"
-                onSearch={(value) => handleSearch(value, setOptionsDestination)}
-                options={optionsDestination}
-                style={{ width: '100%' }}
-              />
-            </Form.Item>
-            <Form.Item
-              label="Data e Hora do Voo"
-              name="datetime"
-              rules={[{ required: true, message: 'Por favor, insira a data e hora do voo!' }]}
-            >
-              <DatePicker
-                showTime
-                format="DD/MM/YYYY HH:mm:ss"
-                valueFormat="YYYY-MM-DDTHH:mm:ssZ"
-                style={{ width: '100%' }}
-                disabledDate={disableDates}
-              />
-            </Form.Item>
-            <Form.Item>
-              <Button type="primary" htmlType="submit" loading={loading} block>
-                Analisar Voo
-              </Button>
-            </Form.Item>
-          </Form>
-        </Card>
+        <Card style={{ margin: 'auto', textAlign: 'center' }}>
+        <Row justify="center">
+          <Col span={analysisResult ? 10 : 24}>
+            <Image
+              src="/images/logo.png"
+              preview={false}
+              alt="Logo"
+              style={{ width: 400 }}
+            />
+            <Form form={form} onFinish={handleAnalyze} layout="vertical">
+              <Form.Item
+                label="Aeroporto de Origem"
+                name="origin"
+                rules={[{ required: true, message: 'Por favor, insira o aeroporto de origem!' }]}
+              >
+                <AutoComplete
+                  placeholder="Selecione o aeroporto de origem"
+                  onSearch={(value) => handleSearch(value, setOptionsOrigin)}
+                  options={optionsOrigin}
+                  style={{ width: '100%' }}
+                />
+              </Form.Item>
+              <Form.Item
+                label="Aeroporto de Destino"
+                name="destination"
+                rules={[{ required: true, message: 'Por favor, insira o aeroporto de destino!' }]}
+              >
+                <AutoComplete
+                  placeholder="Selecione o aeroporto de destino"
+                  onSearch={(value) => handleSearch(value, setOptionsDestination)}
+                  options={optionsDestination}
+                  style={{ width: '100%' }}
+                />
+              </Form.Item>
+              <Form.Item
+                label="Data e Hora do Voo"
+                name="datetime"
+                rules={[{ required: true, message: 'Por favor, insira a data e hora do voo!' }]}
+              >
+                <DatePicker
+                  showTime
+                  format="DD/MM/YYYY HH:mm:ss"
+                  valueFormat="YYYY-MM-DDTHH:mm:ssZ"
+                  style={{ width: '100%' }}
+                  disabledDate={disableDates}
+                />
+              </Form.Item>
+              <Form.Item>
+                <Button style={{ backgroundColor: '#2074b7' }} type="primary" htmlType="submit" loading={loading} block>
+                  Analisar Voo
+                </Button>
+              </Form.Item>
+            </Form>
+          </Col>
 
-        {analysisResult && (
-        <Card style={{ width: 500, margin: 'auto', textAlign: 'center', marginLeft: '50px' }}>
-            <Title level={4}>Resultado da Análise</Title>
-            <Row gutter={16}>
-              <Col span={12}>
-              <Card style={{ height: '100%' }}>
-                  <Title level={5}>Melhor Companhia Aérea</Title>
-                  <p style={{ color: '#2074b7', fontWeight: 'bold' }}>{analysisResult.air_company || 'Desconhecida'}</p>
-                </Card>
-              </Col>
+          {analysisResult && (
+            <Col span={1} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0px 50px 0px 50px' }}>
+              <Divider type="vertical" style={{ height: '80%' }}/>
+            </Col>
+          )}
 
-              <Col span={12}>
+          {analysisResult && (
+            <Col span={10} style={{ height: '100%', marginTop: 'auto', marginBottom: 'auto' }}>
+              <Title level={2} style={{ color: '#2074b7' }}>Resultado da Análise</Title>
+              <Row gutter={16}>
+                <Col span={12}>
+                  <Card style={{ height: '100%' }}>
+                    <Title level={5} style={{ color: '#2074b7' }}>Melhor Companhia Aérea</Title>
+                    <p style={{ color: '#2074b7'}}>{analysisResult?.air_company || 'Desconhecida'}</p>
+                  </Card>
+                </Col>
+
+                <Col span={12}>
+                  <Card style={{ height: '100%' }}>
+                    <Title level={5} style={{ color: '#2074b7' }}>Probabilidade de Atraso</Title>
+                    <Statistic
+                      title="%"
+                      value={analysisResult?.probability_of_outcome}
+                      precision={2}
+                      valueStyle={{ color: analysisResult?.probability_of_outcome > 50 ? 'red' : 'green' }}
+                      prefix={<PieChartOutlined />}
+                    />
+                  </Card>
+                </Col>
+              </Row>
+
+              <Row gutter={16} style={{ marginTop: '20px' }}>
+                <Col span={12}>
+                  <Card style={{ height: '100%' }}>
+                    <Title level={5} style={{ color: '#2074b7' }}>Tempo Estimado de Voo</Title>
+                    <Statistic
+                      title="Horas/Minutos"
+                      value={convertMinutesToHoursAndMinutes(analysisResult?.estimated_flight_time)}
+                      precision={2}
+                      valueStyle={{ color: analysisResult?.estimated_flight_time > analysisResult?.normal_flight_time ? 'red' : 'green' }}
+                      prefix={<ClockCircleOutlined />}
+                    />
+                  </Card>
+                </Col>
+
+                <Col span={12}>
                 <Card style={{ height: '100%' }}>
-                  <Title level={5}>Probabilidade de Atraso</Title>
-                  <Statistic
-                    title="%"
-                    value={analysisResult.probability_of_outcome}
-                    precision={2}
-                    valueStyle={{ color: analysisResult.probability_of_outcome > 50 ? 'red' : 'green' }}
-                    prefix={<PieChartOutlined />}
-                  />
-                </Card>
-              </Col>
-            </Row>
-
-            <Row gutter={16} style={{ marginTop: '20px' }}>
-              <Col span={12}>
-              <Card style={{ height: '100%' }}>
-                  <Title level={5}>Tempo Estimado de Voo</Title>
-                  <Statistic
-                    title="Horas/Minutos"
-                    value={convertMinutesToHoursAndMinutes(analysisResult.estimated_flight_time)}
-                    precision={2}
-                    valueStyle={{ color: analysisResult.estimated_flight_time > analysisResult.normal_flight_time ? 'red' : 'green' }}
-                    prefix={<ClockCircleOutlined />}
-                  />
-                </Card>
-              </Col>
-
-              <Col span={12}>
-              <Card style={{ height: '100%' }}>
-                  <Title level={5}>Tempo Mediano de Voo</Title>
-                  <Statistic
-                    title="Horas/Minutos"
-                    value={convertMinutesToHoursAndMinutes(analysisResult.normal_flight_time)}
-                    precision={2}
-                    valueStyle={{ color: '#2074b7'}}
-                    prefix={<ClockCircleOutlined />}
-                  />
-                </Card>
-              </Col>
-            </Row>
-          </Card>
-        )}
+                    <Title level={5} style={{ color: '#2074b7' }}>Tempo Mediano de Voo</Title>
+                    <Statistic
+                      title="Horas/Minutos"
+                      value={convertMinutesToHoursAndMinutes(analysisResult?.normal_flight_time)}
+                      precision={2}
+                      valueStyle={{ color: '#2074b7'}}
+                      prefix={<ClockCircleOutlined />}
+                    />
+                  </Card>
+                </Col>
+              </Row>
+            </Col>
+          )}
+        </Row>
+        </Card>
       </Content>
     </Layout>
   );
